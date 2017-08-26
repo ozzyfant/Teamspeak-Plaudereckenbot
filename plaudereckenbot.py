@@ -8,7 +8,7 @@ except:
 
 
 class pBot:
-    def __init__(self, ip, port, username, password, displayname, sid, channellist, cpid):
+    def __init__(self, ip, port, username, password, displayname, sid, channellist, cpid, nametemplate = "Chat Corner #"):
         self.ip = ip
         self.port = port
         self.username = username
@@ -16,6 +16,7 @@ class pBot:
         self.sid = sid
         self.channellist = channellist
         self.cpid = cpid
+        self.nametemplate = nametemplate
         self.connect(ip, port, username, password, displayname, sid)
 
     def connect(self, ip, port, username, password, displayname, sid):
@@ -47,8 +48,8 @@ class pBot:
                 + str(len(self.channellist) + 1) + " channel_order="
                 + str(self.channellist[len(self.channellist) - 1]) + "")
         print y
-        x = self.teamspeak.command("channelcreate channel_name=Plauderecke\s"
-                                   + str(len(self.channellist) + 1) + " channel_order="
+        x = self.teamspeak.command("channelcreate channel_name=" + self.teamspeak.string2escaping(self.nametemplate.replace("%", str(len(self.channellist) + 1)))
+                                   + " channel_order="
                                    + str(self.channellist[len(self.channellist) - 1]) +
                                    " cpid=" + str(self.cpid) + " channel_flag_semi_permanent=1 CHANNEL CODEC")
         print x

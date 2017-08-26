@@ -1,36 +1,21 @@
 #!/usr/bin/python
 import plaudereckenbot
 import time
+import yaml
 
-# IP of the TS3 server
-IP = ""
-
-# Query port of the TS3 server
-PORT = 10011
-
-# Username for the query
-USERNAME = "serveradmin"
-
-# Password for the user specified above
-PASSWORD = ""
-
-# Displayname. Name visibible to the users
-DISPLAYNAME = ""
-
-# The ID of the virtual server to run on
-SID = 1
-
-# Which channels should be treated as the original channels (Channel ids)
-CHANNELLIST = [1, 2, 3]
-
-# Channel ID of the parent channel. Created channels are children of this
-CPID = 1
-
-#########################################################################
+with open("config.yml", 'r') as configfile:
+    cfg = yaml.load(configfile)
 
 
-pBot = plaudereckenbot.pBot(IP, PORT, USERNAME, PASSWORD, DISPLAYNAME,
-    SID, CHANNELLIST, CPID)
+pBot = plaudereckenbot.pBot(cfg['server_host'],
+                            cfg['query_port'],
+                            cfg['query_user'],
+                            cfg['query_password'],
+                            cfg['displayname'],
+                            cfg['virtual_server_sid'],
+                            cfg['fixed_channels'][:],
+                            cfg['parent_channel_id'],
+                            cfg['channel_name_template'])
 while 1:
     emptyRooms = 0
     pBot.getUserInfo()
@@ -49,11 +34,13 @@ while 1:
     if len(set(channelUserCount)) == 1 and channelUserCount[0] == True:
         pBot.addChannel()
     print "emptyRooms: " + str(emptyRooms)
+    deletedChannels = 0
     if emptyRooms > 1:
         for i in reversed(range(len(pBot.channellist))):
-            if channelUserCount[i] == 0:
-                if pBot.channellist[i] not in ORIGINALCHANNELS:
+            if channelUserCount[i] == 0 and (deletedChannels + 1) < emptyRooms:
+                if pBot.channellist[i] not in cfg['fixed_channels']:
                     pBot.delChannel(pBot.channellist[i])
+                    deletedChannels = deletedChannels + 1
             else:
                 break
     time.sleep(5)

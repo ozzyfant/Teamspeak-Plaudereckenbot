@@ -1,0 +1,32 @@
+# Hostname or IP of the TeamSpeak 3 server
+server_host: 127.0.0.1
+
+# Query-Port of the TS3 server (default is 10011)
+query_port: 10011
+
+# Query-User for the bot
+query_user: serveradmin
+
+# Corresponding password for the query user
+query_password:
+
+# Displayname to show in server log for channel creation/deletion
+displayname: Chat Corner Bot
+
+# Which virtual server should we be serving?
+# Server ID
+virtual_server_sid: 1
+
+# Channel name template. The percent sign (%) will be replaced by the number of the channel
+channel_name_template: Chat Corner %
+
+# The parent channel. All created channels will be subchannels of this
+# Channel ID
+parent_channel_id: 1
+
+# Define fixed channels which should not be deleted
+# Channel IDs
+fixed_channels:
+  - 1
+  - 2
+  - 3
